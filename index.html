@@ -44,10 +44,8 @@
     <input type="text" id="searchInput" placeholder="Filtrer les macros…" />
     <button id="resetBtn">Réinitialiser les macros</button>
     <button id="exportMacrosBtn">Exporter macros (backup)</button>
-    <label class="btn">
-      <button>Importer macros (backup)</button>
-      <input type="file" id="importMacrosFile" accept="application/json" />
-    </label>
+    <input type="file" id="importMacrosFile" accept="application/json" style="display: none;" />
+<button id="importMacrosBtn">Importer macros (backup)</button>
   </div>
 
   <!-- Tableau des macros -->
@@ -60,7 +58,7 @@
   <!-- Formulaire d'ajout -->
   <form id="addForm">
     <input type="text" id="newMacroName" placeholder="Nom de la macro" required />
-    <textarea id="newMacroText" placeholder="Texte de la macro" required></textarea>
+    <textarea id="newMacroText" placeholder="Texte de la macro" required></textarea><br/>
     <button type="submit">Ajouter</button>
     <button type="button" id="exportBtn">Exporter JSON courant</button>
   </form>
@@ -303,6 +301,9 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
+      $('#importMacrosBtn').addEventListener('click', () => {
+        $('#importMacrosFile').click();
+      });
       initDropzone();
       updateMacroTable();
 
@@ -331,7 +332,7 @@
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'CharacterSettings_modifié.json';
+        a.download = 'CharacterSettings.json';
         a.click();
         URL.revokeObjectURL(url);
       });
@@ -354,4 +355,3 @@
   </script>
 </body>
 </html>
-
