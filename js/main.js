@@ -1,10 +1,11 @@
-console.log(window);
 /* -------------------------------------------------------------- */
 // État courant
 let currentJson = null; // JSON actuellement chargé
 let currentMacros = []; // Alias sur currentJson.Macros
 let windowSettings = [];
 let windowLocations = [];
+let exportChar = false;
+let exportLink = document.getElementById("exportBtn");
 
 /* -------------------------------------------------------------- */
 // Utilitaires DOM & stockage
@@ -145,7 +146,10 @@ window.deleteMacro = function (index) {
 /* -------------------------------------------------------------- */
 // Actions sur JSON courant
 window.removeFromCurrent = function (index) {
-	if (!currentJson) return showMessage("Aucun JSON courant chargé.", true);
+	if (!currentJson) {
+		exportChar = false;
+		return showMessage("Aucun JSON courant chargé.", true);
+	}
 	const macro = getStoredMacros()[index];
 	currentJson.Macros = currentJson.Macros.filter(
 		(m) => m.MacroName.toLowerCase() !== macro.MacroName.toLowerCase()
@@ -156,7 +160,10 @@ window.removeFromCurrent = function (index) {
 };
 
 window.addToCurrent = function (index) {
-	if (!currentJson) return showMessage("Aucun JSON courant chargé.", true);
+	if (!currentJson) {
+		exportChar = false;
+		return showMessage("Aucun JSON courant chargé.", true);
+	}
 	const macro = getStoredMacros()[index];
 	if (inCurrentJson(macro.MacroName)) {
 		return showMessage("Macro déjà présente dans le JSON courant.", true);
@@ -214,6 +221,7 @@ function handleFileDrop(file) {
 				!json.WindowSettingValues ||
 				!json.WindowLocations
 			) {
+				exportTrigger(false);
 				return showMessage("Fichier JSON invalide.", true);
 			}
 			currentJson = json;
@@ -228,11 +236,19 @@ function handleFileDrop(file) {
 			showMessage(
 				`${currentMacros.length} macros importées. Total stock : ${merged.length}.`
 			);
+			exportTrigger(true);
 		} catch {
 			showMessage("Erreur lors de la lecture du fichier JSON.", true);
 		}
 	};
 	reader.readAsText(file);
+}
+
+function exportTrigger(boule = false) {
+	exportChar = boule ? true : false;
+	exportChar
+		? (exportLink.style.display = "block")
+		: (exportLink.style.display = "none");
 }
 
 function initDropzone() {
@@ -271,6 +287,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	});
 	initDropzone();
 	updateMacroTable();
+	exportTrigger(false);
 
 	$("#addForm").addEventListener("submit", (e) => {
 		e.preventDefault();
@@ -291,8 +308,10 @@ document.addEventListener("DOMContentLoaded", () => {
 	});
 
 	$("#exportBtn").addEventListener("click", () => {
-		if (!currentJson)
+		if (!currentJson) {
+			exportTrigger();
 			return showMessage("Aucun JSON chargé à exporter.", true);
+		}
 		currentJson.Macros = getStoredMacros().filter((macro) =>
 			currentJson.Macros.some(
 				(jm) => jm.MacroName.toLowerCase() === macro.MacroName.toLowerCase()
@@ -315,6 +334,8 @@ document.addEventListener("DOMContentLoaded", () => {
 		localStorage.removeItem("storedMacros");
 		updateMacroTable();
 		showMessage("Macros réinitialisées.");
+
+		exportTrigger();
 	});
 
 	$("#exportMacrosBtn").addEventListener("click", exportStoredMacros);

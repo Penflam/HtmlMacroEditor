@@ -6,7 +6,7 @@ const modalContents = {
 		"Téléchargez vos macros enregistrées en local pour le partager. Cliquez sur [Exporter macros (backup)]",
 	clear: "Attention : cette action supprimera toutes vos macros en local.",
 	fichiers:
-		"Les fichiers des personnages se trouvent dans :\nC:/Users/[TonNom]/AppData/Local/Jeu/Personnages",
+		"Les fichiers des personnages se trouvent dans :\n <pre>C:/Users/[VotreNom]/AppData/LocalLow/Visionary Realms/Pantheon/Settings/CharacterSettings/</pre>",
 	changer:
 		"Pour changer les fichiers de personnages, allez dans les paramètres ou copiez vos fichiers dans le dossier indiqué. (à faire)",
 	tuto: "Lien vers la vidéo tutorielle à venir. (à faire)",
