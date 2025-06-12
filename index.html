@@ -3,10 +3,11 @@
 	<head>
 		<meta charset="UTF-8" />
 		<title>Pantheon's Macros Editor</title>
+		<link rel="icon" href="data:;base64,iVBORw0KGgo=" />
 		<link rel="stylesheet" href="style.css" />
 	</head>
-	<body
-		><div class="navbar">
+	<body>
+		<div class="navbar">
 			<div class="menu"
 				>Fichier
 				<div class="dropdown">
@@ -62,59 +63,59 @@
 			</div>
 		</div>
 
-		<div class="page-content"> </div>
-		<h1>Importation de macros JSON</h1>
-		<div class="dropzone" id="dropzone"
-			>Glissez un fichier CharacterSettings.json ici<br />ils se trouvent
-			ici:<br />
-			C:\Users\[VotreNom]\AppData\LocalLow\Visionary
-			Realms\Pantheon\Settings\CharacterSettings\</div
-		>
-		<div class="message" id="message"></div>
-
-		<!-- Outils complémentaires -->
-		<div class="tools">
-			<input
-				type="text"
-				id="searchInput"
-				placeholder="Filtrer les macros…" />
-			<!-- <button id="resetBtn">Réinitialiser les macros</button> -->
-			<!-- <button id="exportMacrosBtn">Exporter macros (backup)</button> -->
-			<input
-				type="file"
-				id="importMacrosFile"
-				accept="application/json"
-				style="display: none" />
-			<!-- <button id="importMacrosBtn">Importer macros (backup)</button> -->
-		</div>
-
-		<!-- Tableau des macros -->
-		<h2>Macros en localStorage</h2>
-		<table id="macroTable">
-			<thead
-				><tr
-					><th class="td">Nom</th><th>Texte</th><th>Actions</th></tr
-				></thead
+		<div class="page-content">
+			<h1>Importation de macros JSON</h1>
+			<div class="dropzone" id="dropzone"
+				>Glissez un fichier CharacterSettings.json ici<br />ils se trouvent
+				ici:<br />
+				C:\Users\[VotreNom]\AppData\LocalLow\Visionary
+				Realms\Pantheon\Settings\CharacterSettings\</div
 			>
-			<tbody></tbody>
-		</table>
+			<div class="message" id="message"></div>
 
-		<!-- Formulaire d'ajout -->
-		<form id="addForm">
-			<input
-				type="text"
-				id="newMacroName"
-				placeholder="Nom de la macro"
-				required />
-			<textarea
-				id="newMacroText"
-				placeholder="Texte de la macro"
-				required></textarea
-			><br />
-			<button type="submit">Ajouter</button>
-			<!-- <button type="button" id="exportBtn">Exporter JSON courant</button> -->
-		</form>
+			<!-- Outils complémentaires -->
+			<div class="tools">
+				<input
+					type="text"
+					id="searchInput"
+					placeholder="Filtrer les macros…" />
+				<!-- <button id="resetBtn">Réinitialiser les macros</button> -->
+				<!-- <button id="exportMacrosBtn">Exporter macros (backup)</button> -->
+				<input
+					type="file"
+					id="importMacrosFile"
+					accept="application/json"
+					style="display: none" />
+				<!-- <button id="importMacrosBtn">Importer macros (backup)</button> -->
+			</div>
 
+			<!-- Tableau des macros -->
+			<h2>Macros en localStorage</h2>
+			<table id="macroTable">
+				<thead
+					><tr
+						><th class="td">Nom</th><th>Texte</th><th>Actions</th></tr
+					></thead
+				>
+				<tbody></tbody>
+			</table>
+
+			<!-- Formulaire d'ajout -->
+			<form id="addForm">
+				<input
+					type="text"
+					id="newMacroName"
+					placeholder="Nom de la macro"
+					required />
+				<textarea
+					id="newMacroText"
+					placeholder="Texte de la macro"
+					required></textarea
+				><br />
+				<button type="submit">Ajouter</button>
+				<!-- <button type="button" id="exportBtn">Exporter JSON courant</button> -->
+			</form>
+		</div>
 		<!-- Sections pour WindowSettingValues & WindowLocations -->
 		<details id="wsSection" hidden>
 			<summary>WindowSettingValues (<span id="wsCount"></span>)</summary>
@@ -124,31 +125,45 @@
 			<summary>WindowLocations (<span id="wlCount"></span>)</summary>
 			<pre id="wlContent">bbb</pre>
 		</details>
+
 		<!-- Footer sombre -->
 		<footer class="footer">
 			<div class="footer-links">
 				<a
+					href="https://www.pantheonmmo.com/"
+					target="_blank"
+					title="Pantheon – Rise Of The Fallen">
+					<img
+						src="castle-fortress-svgrepo-com.svg"
+						alt="Pantheon – Rise Of The Fallen"
+						class="footer-icon" />
+					Pantheon
+				</a>
+
+				<a
 					href="https://github.com/Penflam/HtmlMacroEditor"
+					title="GitHub Sources"
 					target="_blank">
 					<img
 						src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/github.svg"
-						alt="GitHub"
+						alt="GitHub Sources"
 						class="footer-icon" />
 					GitHub
 				</a>
 
-				<a href="https://shalazam.info" target="_blank">
+				<a
+					href="https://shalazam.info"
+					target="_blank"
+					title="shalazam.info">
 					<img
 						src="favicon-96.png"
-						alt="FreeCodeCamp"
+						alt="shalazam.info"
 						class="footer-icon" />
 					shalazam
 				</a>
 				<!-- Ajoute ici tes autres liens favoris -->
 			</div>
-			<div class="footer-text">
-				© 2025 Pantheon's Macros Editor – Tous droits réservés
-			</div>
+			<div class="footer-text"> Pantheon's Tribute : Macros Editor </div>
 		</footer>
 
 		<script src="js/main.js"></script>
