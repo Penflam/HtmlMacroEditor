@@ -5,13 +5,13 @@
 }
 body {
 	font-family: sans-serif;
-	background-position: center;
 	background-image: url("/assets/arkanlemarchand.webp");
 	background-repeat: no-repeat;
 	-webkit-background-size: cover;
 	-moz-background-size: cover;
 	-o-background-size: cover;
 	background-size: cover;
+	background-position: 50%;
 }
 .page-content {
 	background-color: #dfdfdfab;
