@@ -5,6 +5,10 @@
 }
 body {
 	font-family: sans-serif;
+	background-image: url("ChatGPT Image 12 juin 2025, 15_08_21.png");
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-position: center;
 }
 /* Dropzone */
 .dropzone {
@@ -157,8 +161,9 @@ details {
 				margin: 6px 0;
 			} */
 .page-content {
-	margin-top: 20px;
-	padding: 1rem;
+	background-color: #dfdfdfc4;
+	padding: 40px 1rem 150px 1rem;
+	min-height: 100vh;
 }
 /* Modal styles */
 .modal-bg {
@@ -172,6 +177,10 @@ details {
 	z-index: 5000;
 	align-items: center;
 	justify-content: center;
+	/* background-image: url("");
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-position: center; */
 }
 .modal-bg.active {
 	display: flex;
@@ -212,12 +221,13 @@ details {
 }
 /* footer */
 .footer {
-	background: #1a1a1a;
 	color: #f2f2f2;
-	padding: 22px 0 14px 0;
+	padding: 14px 0 8px 0;
 	text-align: center;
-	position: relative;
-	margin-top: 36px;
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+	background-color: #000000;
 }
 .footer-links {
 	margin-bottom: 10px;

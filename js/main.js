@@ -4,7 +4,7 @@ let currentJson = null; // JSON actuellement chargé
 let currentMacros = []; // Alias sur currentJson.Macros
 let windowSettings = [];
 let windowLocations = [];
-let exportChar = false;
+let exportChar = false; // export character actif ou pas
 let exportLink = document.getElementById("exportBtn");
 
 /* -------------------------------------------------------------- */
@@ -18,7 +18,13 @@ function showMessage(msg, isError = false) {
 }
 
 function getStoredMacros() {
-	return JSON.parse(localStorage.getItem("storedMacros") || "[]");
+	let macroos = JSON.parse(localStorage.getItem("storedMacros") || "[]");
+	if (macroos.length < 1) {
+		macroos.push({ MacroName: "LOC", MacroText: "/loc" });
+		macroos.push({ MacroName: "RECALL", MacroText: "/stuck bind" });
+		macroos.push({ MacroName: "GUILD", MacroText: "/who guild" });
+	}
+	return macroos;
 }
 
 function saveStoredMacros(macros) {
@@ -45,13 +51,39 @@ function inCurrentJson(name) {
 		)
 	);
 }
-
+function getBaseMacro() {
+	return [
+		{
+			MacroName: "LOC",
+			MacroText: "/loc",
+		},
+		{
+			MacroName: "RECALL",
+			MacroText: "/stuck bind",
+		},
+		{
+			MacroName: "GUILD",
+			MacroText: "/who guild",
+		},
+		{
+			MacroName: "FRIENDS",
+			MacroText: "/who friends",
+		},
+		{
+			MacroName: "REST",
+			MacroText: "/rest",
+		},
+	];
+}
 function updateMacroTable() {
 	const tbody = $("#macroTable tbody");
 	tbody.innerHTML = "";
 	const macros = getStoredMacros();
 	const hasCurrent = !!currentJson;
-
+	if (macros && macros.length < 1) {
+		console.log("macro table", macros.length);
+		console.log(macros);
+	}
 	macros.forEach((macro, index) => {
 		const inCurrent = inCurrentJson(macro.MacroName);
 		const row = document.createElement("tr");
