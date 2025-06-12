@@ -1,0 +1,250 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+body {
+	font-family: sans-serif;
+	padding: 1em;
+}
+/* Dropzone */
+.dropzone {
+	border: 3px dashed #888;
+	padding: 2em;
+	text-align: center;
+	background: #fff;
+	margin-bottom: 2em;
+	transition: background 0.2s, border-color 0.2s;
+	background: #e6e5e5;
+	border-radius: 1rem;
+}
+.dropzone.hover {
+	border-color: #007bff;
+	background: #eef5ff;
+}
+
+/* Messages */
+.message {
+	margin-top: 1em;
+	font-weight: bold;
+}
+
+/* Tableau */
+table {
+	border-collapse: collapse;
+	width: 100%;
+	background: #fff;
+	margin-top: 0.5em;
+}
+th,
+td {
+	border: 1px solid #ccc;
+	padding: 0.5em;
+	vertical-align: top;
+}
+input[type="text"] {
+	/* width: 100%; */
+	padding: 10px;
+}
+textarea {
+	width: 100%;
+	height: 4em;
+	font-family: monospace;
+	white-space: pre-wrap;
+	resize: vertical;
+}
+.actions button {
+	margin: 0 0.15em;
+}
+
+/* Indicateur de présence dans JSON courant */
+.in-current {
+	background: #eaffea;
+}
+.not-in-current {
+	background: #ffecec;
+}
+
+/* Barres d'outils */
+.tools {
+	margin: 1.5em 0;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5em;
+	align-items: center;
+}
+.tools input[type="file"] {
+	display: none;
+}
+
+details {
+	margin-top: 1.5em;
+}
+.td {
+	width: 1%;
+	/* background-color: #007bff; */
+	.button {
+		background-color: #e6f0fa;
+		border-radius: 5px;
+		border: 0px;
+		padding: 1px;
+		margin: 0 2px 2px 0;
+		cursor: pointer;
+	}
+}
+
+/* form */
+
+#addForm {
+	padding: 20px;
+}
+
+/* navigation */
+.navbar {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	background: #05064d;
+	border-bottom: 1px solid #05064d;
+	display: flex;
+	z-index: 1000;
+	height: 32px;
+	font-family: "Segoe UI", Arial, sans-serif;
+	user-select: none;
+	color: white;
+}
+.menu {
+	position: relative;
+	padding: 0 16px;
+	line-height: 32px;
+	cursor: pointer;
+}
+.menu:hover,
+.menu.active {
+	background: #05064d;
+	color: whitesmoke;
+}
+.dropdown {
+	display: none;
+	position: absolute;
+	top: 31px;
+	left: 0;
+	background: #fff;
+	border: 1px solid #111275;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+	min-width: 220px;
+}
+.menu:hover .dropdown {
+	display: block;
+}
+.dropdown a,
+.dropdown span {
+	display: block;
+	padding: 8px 20px;
+	text-decoration: none;
+	color: #222;
+	font-size: 15px;
+	white-space: nowrap;
+	cursor: pointer;
+}
+.dropdown a:hover,
+.dropdown span:hover {
+	background: #05064d;
+	color: white;
+}
+/* .separator {
+				border-bottom: 1px solid #ddd;
+				margin: 6px 0;
+			} */
+.page-content {
+	margin-top: 20px;
+}
+/* Modal styles */
+.modal-bg {
+	display: none;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	background: rgba(0, 0, 0, 0.2);
+	z-index: 5000;
+	align-items: center;
+	justify-content: center;
+}
+.modal-bg.active {
+	display: flex;
+}
+.modal {
+	background: #fff;
+	border-radius: 6px;
+	box-shadow: 0 4px 24px rgba(0, 0, 0, 0.16);
+	min-width: 340px;
+	max-width: 90vw;
+	padding: 28px 22px 22px 22px;
+	position: relative;
+	animation: popin 0.16s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+@keyframes popin {
+	0% {
+		transform: scale(0.92);
+	}
+	100% {
+		transform: scale(1);
+	}
+}
+.modal-close {
+	position: absolute;
+	right: 10px;
+	top: 8px;
+	font-size: 20px;
+	color: #888;
+	cursor: pointer;
+	font-weight: bold;
+	background: none;
+	border: none;
+	outline: none;
+}
+.modal-content {
+	margin-top: 12px;
+	min-height: 50px;
+}
+/* footer */
+.footer {
+	background: #1a1a1a;
+	color: #f2f2f2;
+	padding: 22px 0 14px 0;
+	text-align: center;
+	position: relative;
+	margin-top: 36px;
+}
+.footer-links {
+	margin-bottom: 10px;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 18px;
+}
+.footer-links a {
+	color: #f2f2f2;
+	text-decoration: none;
+	display: flex;
+	align-items: center;
+	font-size: 17px;
+	transition: color 0.17s;
+}
+.footer-links a:hover {
+	color: #ffd700;
+}
+.footer-icon {
+	width: 22px;
+	height: 22px;
+	margin-right: 8px;
+	filter: brightness(95%) invert(92%);
+	vertical-align: middle;
+}
+.footer-text {
+	font-size: 14px;
+	opacity: 0.67;
+}
