@@ -194,9 +194,11 @@ details {
 	box-shadow: 0 4px 24px rgba(0, 0, 0, 0.16);
 	min-width: 340px;
 	max-width: 90vw;
+	max-height: 90vh;
 	padding: 28px 22px 22px 22px;
 	position: relative;
 	animation: popin 0.16s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+	overflow-y: auto;
 }
 @keyframes popin {
 	0% {
@@ -221,6 +223,34 @@ details {
 .modal-content {
 	margin-top: 12px;
 	min-height: 50px;
+}
+
+.commande-bloc {
+	border: 1px solid black;
+	padding: 5px;
+	display: flex;
+	justify-items: center;
+	flex-direction: column;
+}
+.commande-name {
+	display: flex;
+	justify-items: center;
+	flex-direction: row;
+	flex-wrap: wrap;
+}
+.command-item {
+	width: max-content;
+	border: 1px solid rgb(117, 117, 117);
+	white-space: nowrap;
+	padding: 5px 15px;
+	margin: 0 2px 5px 0;
+	border-radius: 5px;
+}
+.commande-name :first-child {
+	border: 1px solid rgb(71, 4, 4);
+	background-color: #007bff;
+	color: white;
+	font-size: 1.5rem;
 }
 /* footer */
 .footer {

@@ -25,6 +25,9 @@ document.querySelectorAll("[data-modal]").forEach((el) => {
 		modalContent.textContent = content;
 		// Pour gérer les sauts de ligne dans le texte :
 		modalContent.innerHTML = modalContent.textContent.replace(/\n/g, "<br>");
+		if (key === "macro") {
+			addCommande(modalContent);
+		}
 		document.getElementById("modalBg").classList.add("active");
 	});
 });
