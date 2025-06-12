@@ -5,10 +5,18 @@
 }
 body {
 	font-family: sans-serif;
-	background-image: url("ChatGPT Image 12 juin 2025, 15_08_21.png");
-	background-repeat: no-repeat;
-	background-size: cover;
 	background-position: center;
+	background-image: url("/assets/arkanlemarchand.webp");
+	background-repeat: no-repeat;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+}
+.page-content {
+	background-color: #dfdfdfab;
+	padding: 40px 1rem 150px 1rem;
+	min-height: 100vh;
 }
 /* Dropzone */
 .dropzone {
@@ -160,11 +168,6 @@ details {
 				border-bottom: 1px solid #ddd;
 				margin: 6px 0;
 			} */
-.page-content {
-	background-color: #dfdfdfc4;
-	padding: 40px 1rem 150px 1rem;
-	min-height: 100vh;
-}
 /* Modal styles */
 .modal-bg {
 	display: none;
