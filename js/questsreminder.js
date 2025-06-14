@@ -70,14 +70,17 @@ function render() {
 		const div = document.createElement("div");
 		div.className = "entry" + (entry.valide ? " validated" : "");
 		let ladate = new Date(entry.dateAjout).toLocaleDateString();
-		let ladescription = highlight(entry.description, textFilter);
+		let ladescription = highlight(entry.description, textFilter).replace(
+			/\n/g,
+			"<br>"
+		);
 		div.innerHTML = ` <strong>${icon} [${entry.type.toUpperCase()}]</strong> <b>${highlight(
 			entry.titre,
 			textFilter
 		)}</b><br>
 					<small>Ajouté le ${ladate}</small><br>
-					<p>${ladescription}</p>
-					
+					<p class="description-item">${ladescription}</p>
+					<div class="link-item">
 					${
 						entry.liens && Array.isArray(entry.liens)
 							? entry.liens
@@ -93,12 +96,14 @@ function render() {
 									.join("<br>")
 							: ""
 					}
-
-      <div class="actions"><button onclick="toggleValid(${entry.id})">${
-			entry.valide ? "Marquer non validé" : "Valider"
-		}</button>
-        <button onclick="editEntry(${entry.id})">Modifier</button>
-        <button onclick="deleteEntry(${entry.id})">Supprimer</button>
+					</div>
+      <div title="Done/Validé" class="actions"><button onclick="toggleValid(${
+			entry.id
+		})">${entry.valide ? "✅" : "❎"}</button>
+        <button title="edit/éditer" onclick="editEntry(${entry.id})">✍️</button>
+        <button title="delete/éffacer" onclick="deleteEntry(${
+				entry.id
+			})">🚮</button>
       </div>`;
 		entriesDiv.appendChild(div);
 	});
