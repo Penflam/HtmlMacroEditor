@@ -4,8 +4,7 @@ let currentJson = null; // JSON actuellement chargé
 let currentMacros = []; // Alias sur currentJson.Macros
 let windowSettings = [];
 let windowLocations = [];
-let exportChar = false; // export character actif ou pas
-let exportLink = document.getElementById("exportBtn");
+let dropzone = undefined;
 
 /* -------------------------------------------------------------- */
 // Utilitaires DOM & stockage
@@ -20,9 +19,15 @@ function showMessage(msg, isError = false) {
 function getStoredMacros() {
 	let macroos = JSON.parse(localStorage.getItem("storedMacros") || "[]");
 	if (macroos.length < 1) {
-		macroos.push({ MacroName: "LOC", MacroText: "/loc" });
-		macroos.push({ MacroName: "RECALL", MacroText: "/stuck bind" });
-		macroos.push({ MacroName: "GUILD", MacroText: "/who guild" });
+		let baseMacro = getBasicMacros();
+		if (baseMacro.length > 0) {
+			baseMacro.forEach((element) => {
+				macroos.push({
+					MacroName: element.MacroName,
+					MacroText: element.MacroText,
+				});
+			});
+		}
 	}
 	return macroos;
 }
@@ -35,6 +40,19 @@ function mergeMacros(existing, incoming) {
 	const map = new Map(existing.map((m) => [m.MacroName.toLowerCase(), m]));
 	incoming.forEach((m) => map.set(m.MacroName.toLowerCase(), m));
 	return [...map.values()];
+}
+
+function exportTrigger(boule = false) {
+	exportChar = boule ? true : false;
+	if (exportLink) {
+		if (currentJson && exportChar) {
+			exportLink.style.display = "block";
+			dropzone.classList.add("green");
+		} else {
+			dropzone.classList.remove("green");
+			exportLink.style.display = "none";
+		}
+	}
 }
 
 /* -------------------------------------------------------------- */
@@ -50,30 +68,6 @@ function inCurrentJson(name) {
 			(m) => m.MacroName.toLowerCase() === name.toLowerCase()
 		)
 	);
-}
-function getBaseMacro() {
-	return [
-		{
-			MacroName: "LOC",
-			MacroText: "/loc",
-		},
-		{
-			MacroName: "RECALL",
-			MacroText: "/stuck bind",
-		},
-		{
-			MacroName: "GUILD",
-			MacroText: "/who guild",
-		},
-		{
-			MacroName: "FRIENDS",
-			MacroText: "/who friends",
-		},
-		{
-			MacroName: "REST",
-			MacroText: "/rest",
-		},
-	];
 }
 function updateMacroTable() {
 	const tbody = $("#macroTable tbody");
@@ -106,6 +100,12 @@ function updateMacroTable() {
 		}>➕</button>
           </td>`;
 		tbody.appendChild(row);
+		// Appliquer le redimensionnement sur chaque textarea nouvellement créé
+		const textarea = row.querySelector(".edit-text");
+		if (textarea) {
+			autoResizeTextarea(textarea);
+			textarea.addEventListener("input", () => autoResizeTextarea(textarea));
+		}
 	});
 	applyFilter();
 }
@@ -121,6 +121,11 @@ function renderSettingsSections() {
 		$("#wlCount").textContent = windowLocations.length;
 		$("#wlContent").textContent = JSON.stringify(windowLocations, null, 2);
 	}
+}
+
+function autoResizeTextarea(textarea) {
+	textarea.style.height = "auto"; // Réinitialise d'abord la hauteur
+	textarea.style.height = textarea.scrollHeight + 10 + "px"; // Adapte à la hauteur du contenu
 }
 
 /* -------------------------------------------------------------- */
@@ -268,6 +273,10 @@ function handleFileDrop(file) {
 			showMessage(
 				`${currentMacros.length} macros importées. Total stock : ${merged.length}.`
 			);
+
+			addExportCharactereLink();
+
+			dropzone.classList.add("green");
 			exportTrigger(true);
 		} catch {
 			showMessage("Erreur lors de la lecture du fichier JSON.", true);
@@ -276,15 +285,9 @@ function handleFileDrop(file) {
 	reader.readAsText(file);
 }
 
-function exportTrigger(boule = false) {
-	exportChar = boule ? true : false;
-	exportChar
-		? (exportLink.style.display = "block")
-		: (exportLink.style.display = "none");
-}
-
 function initDropzone() {
-	const dropzone = document.getElementById("dropzone");
+	dropzone = document.getElementById("dropzone");
+	// const dropzone = document.getElementById("dropzone");
 	dropzone.addEventListener("dragover", (e) => {
 		e.preventDefault();
 		dropzone.classList.add("hover");
@@ -304,41 +307,17 @@ function initDropzone() {
 	});
 }
 
-function applyFilter() {
-	const term = $("#searchInput").value.toLowerCase();
-	const rows = $("#macroTable tbody").querySelectorAll("tr");
-	rows.forEach((row) => {
-		const text = row.innerText.toLowerCase();
-		row.style.display = text.includes(term) ? "" : "none";
-	});
-}
+function addExportCharactereLink() {
+	if (exportLink) {
+		exportLink.remove();
+	}
+	exportLink = document.createElement("span");
+	exportLink.id = "exportBtn";
+	exportLink.className = "exportBtn";
+	exportLink.textContent = "Export actual CharacterSettings.json";
 
-document.addEventListener("DOMContentLoaded", () => {
-	$("#importMacrosBtn").addEventListener("click", () => {
-		$("#importMacrosFile").click();
-	});
-	initDropzone();
-	updateMacroTable();
-	exportTrigger(false);
-
-	$("#addForm").addEventListener("submit", (e) => {
-		e.preventDefault();
-		const name = $("#newMacroName").value.trim();
-		const text = $("#newMacroText").value;
-		if (!name) return showMessage("Le nom ne peut pas être vide.", true);
-		let macros = getStoredMacros();
-		if (
-			macros.some((m) => m.MacroName.toLowerCase() === name.toLowerCase())
-		) {
-			return showMessage("Nom de macro déjà existant.", true);
-		}
-		macros.push({ MacroName: name, MacroText: text });
-		saveStoredMacros(macros);
-		updateMacroTable();
-		showMessage("Macro ajoutée.");
-		e.target.reset();
-	});
-
+	filesmenu.appendChild(exportLink);
+	("Exporter le fichier CharacterSettings.json courant");
 	$("#exportBtn").addEventListener("click", () => {
 		if (!currentJson) {
 			exportTrigger();
@@ -358,6 +337,44 @@ document.addEventListener("DOMContentLoaded", () => {
 		a.download = "CharacterSettings.json";
 		a.click();
 		URL.revokeObjectURL(url);
+	});
+}
+
+function applyFilter() {
+	const term = $("#searchInput").value.toLowerCase();
+	const rows = $("#macroTable tbody").querySelectorAll("tr");
+	rows.forEach((row) => {
+		const text = row.innerText.toLowerCase();
+		row.style.display = text.includes(term) ? "" : "none";
+	});
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+	$("#importMacrosBtn").addEventListener("click", () => {
+		$("#importMacrosFile").click();
+	});
+	initDropzone();
+	updateMacroTable();
+	initnavigation();
+
+	exportTrigger(false);
+
+	$("#addForm").addEventListener("submit", (e) => {
+		e.preventDefault();
+		const name = $("#newMacroName").value.trim();
+		const text = $("#newMacroText").value;
+		if (!name) return showMessage("Le nom ne peut pas être vide.", true);
+		let macros = getStoredMacros();
+		if (
+			macros.some((m) => m.MacroName.toLowerCase() === name.toLowerCase())
+		) {
+			return showMessage("Nom de macro déjà existant.", true);
+		}
+		macros.push({ MacroName: name, MacroText: text });
+		saveStoredMacros(macros);
+		updateMacroTable();
+		showMessage("Macro ajoutée.");
+		e.target.reset();
 	});
 
 	$("#searchInput").addEventListener("input", applyFilter);

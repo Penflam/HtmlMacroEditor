@@ -1,0 +1,94 @@
+/* Modal styles */
+.modal-bg {
+	display: none;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	background: rgba(0, 0, 0, 0.2);
+	z-index: 5000;
+	align-items: center;
+	justify-content: center;
+	/* background-image: url("");
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-position: center; */
+}
+.modal-bg.active {
+	display: flex;
+}
+.modal {
+	background: #fff;
+	border-radius: 6px;
+	box-shadow: 0 4px 24px rgba(0, 0, 0, 0.16);
+	min-width: 340px;
+	max-width: 90vw;
+	max-height: 90vh;
+	padding: 28px 22px 22px 22px;
+	position: relative;
+	animation: popin 0.16s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+	overflow-y: auto;
+}
+@keyframes popin {
+	0% {
+		transform: scale(0.92);
+	}
+	100% {
+		transform: scale(1);
+	}
+}
+.modal-close {
+	position: absolute;
+	right: 10px;
+	top: 8px;
+	font-size: 20px;
+	color: #888;
+	cursor: pointer;
+	font-weight: bold;
+	background: none;
+	border: none;
+	outline: none;
+}
+.modal-content {
+	margin-top: 12px;
+	min-height: 50px;
+}
+
+.commande-bloc {
+	border: 1px solid black;
+	padding: 5px;
+	display: flex;
+	justify-items: center;
+	flex-direction: column;
+}
+.commande-name {
+	display: flex;
+	justify-items: center;
+	flex-direction: row;
+	flex-wrap: wrap;
+}
+.command-item {
+	width: max-content;
+	border: 1px solid rgb(117, 117, 117);
+	white-space: nowrap;
+	padding: 5px 15px;
+	margin: 0 2px 5px 0;
+	border-radius: 5px;
+	font-size: 1.2rem;
+	display: flex;
+	align-self: center;
+}
+.ok {
+	background-color: #1fbb34;
+}
+.ko {
+	background-color: rgb(238, 88, 1);
+	color: white;
+}
+.commande-name :first-child {
+	border: 1px solid rgb(71, 4, 4);
+	/* background-color: #007bff;
+	color: white; */
+	font-size: 1.5rem;
+}

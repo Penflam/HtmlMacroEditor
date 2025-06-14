@@ -5,18 +5,26 @@
 		<title>Pantheon's Macros Editor</title>
 		<link rel="icon" href="data:;base64,iVBORw0KGgo=" />
 		<link rel="stylesheet" href="style.css" />
+		<link rel="stylesheet" href="modal.css" />
+		<link rel="stylesheet" href="footer.css" />
 	</head>
 	<body>
 		<div class="navbar">
 			<div class="menu"
 				>Fichier
-				<div class="dropdown">
+				<div id="filesmenu" class="dropdown">
 					<span id="importMacrosBtn">Importer Macros_backup.json</span>
 					<span id="exportMacrosBtn">Exporter Macros_backup.json</span>
-					<span id="resetBtn">Réinitialiser les macros</span>
-					<span id="exportBtn" class="exportBtn"
-						>Exporter le fichier CharacterSettings.json courant</span
-					>
+				</div>
+			</div>
+			<div class="menu"
+				><a href="questsreminder.html" target="_blank">QuestsReminder</a>
+			</div>
+			<div class="menu"
+				>Link
+				<div class="dropdown">
+					<a href="index.html">Macro Editor</a>
+					<span data-modal="autres">Autres</span>
 				</div>
 			</div>
 			<div class="menu"
@@ -41,6 +49,12 @@
 						>Démo sur Github</a
 					>
 					<span data-modal="autres">Autres</span>
+				</div>
+			</div>
+			<div class="menu"
+				>Reset
+				<div class="dropdown">
+					<span id="resetBtn">Réinitialiser les macros</span>
 				</div>
 			</div>
 			<div class="menu"
@@ -113,7 +127,6 @@
 					required></textarea
 				><br />
 				<button type="submit">Ajouter</button>
-				<!-- <button type="button" id="exportBtn">Exporter JSON courant</button> -->
 			</form>
 		</div>
 
@@ -167,6 +180,8 @@
 			<div class="footer-text"> Pantheon's Tribute : Macros Editor </div>
 		</footer>
 
+		<script src="js/basicmacros.js"></script>
+		<script src="js/navigation.js"></script>
 		<script src="js/slashcommand.js"></script>
 		<script src="js/main.js"></script>
 		<script src="js/modals.js"></script>
