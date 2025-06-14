@@ -201,9 +201,14 @@
 					<label
 						>Description : <textarea id="description"></textarea>
 					</label>
-					<label
-						>Url/Lien (optionnel) : <input type="url" id="lien"
-					/></label>
+
+					<label>Liens (optionnels) :</label>
+					<label>Liens (titre + URL) :</label>
+					<div id="lienContainer"></div>
+					<button type="button" onclick="addLienField()"
+						>➕ Ajouter un lien</button
+					>
+
 					<input type="hidden" id="entryId" />
 					<button type="submit">Enregistrer</button>
 				</form>
@@ -244,65 +249,22 @@
 				document.getElementById("filterText").value = "";
 				render();
 			}
-			// 	function render() {
-			// 		const typeFilter = filterType.value.toLowerCase();
-			// 		const dateFilter = filterDate.value;
-			// 		const textFilter = filterText.value.toLowerCase();
-			// 		const order = sortOrder.value;
-
-			// 		entriesDiv.innerHTML = "";
-
-			// 		let filtered = entries.filter((e) => {
-			// 			const matchesType = !typeFilter || e.type === typeFilter;
-			// 			const matchesDate =
-			// 				!dateFilter || e.dateAjout.startsWith(dateFilter);
-			// 			const matchesText =
-			// 				!textFilter ||
-			// 				e.type.toLowerCase().includes(textFilter) ||
-			// 				e.titre.toLowerCase().includes(textFilter) ||
-			// 				e.description.toLowerCase().includes(textFilter) ||
-			// 				(e.lien && e.lien.toLowerCase().includes(textFilter));
-			// 			return matchesType && matchesDate && matchesText;
-			// 		});
-
-			// 		filtered.sort((a, b) =>
-			// 			order === "asc"
-			// 				? new Date(a.dateAjout) - new Date(b.dateAjout)
-			// 				: new Date(b.dateAjout) - new Date(a.dateAjout)
-			// 		);
-
-			// 		filtered.forEach((entry) => {
-			// 			const div = document.createElement("div");
-			// 			div.className = "entry" + (entry.valide ? " validated" : "");
-			// 			div.innerHTML = `
-			//   <strong>[${entry.type.toUpperCase()}]</strong> <b>${
-			// 				entry.titre
-			// 			}</b><br>
-			//   <small>Ajouté le ${new Date(
-			// 			entry.dateAjout
-			// 		).toLocaleDateString()}</small><br>
-			//   <p>${entry.description}</p>
-			//   ${
-			// 			entry.lien
-			// 				? `<a href="${entry.lien}" target="_blank">Lien utile</a><br>`
-			// 				: ""
-			// 		}
-			//   <div class="actions">
-			//     <button onclick="toggleValid(${entry.id})">${
-			// 				entry.valide ? "Marquer non validé" : "Valider"
-			// 			}</button>
-			//     <button onclick="editEntry(${entry.id})">Modifier</button>
-			//     <button onclick="deleteEntry(${entry.id})">Supprimer</button>
-			//   </div>
-			// `;
-			// 			entriesDiv.appendChild(div);
-			// 		});
-			// 	}
 			// 🟡 Fonction de surbrillance
 			function highlight(text, filter) {
 				if (!filter) return text;
 				const re = new RegExp(`(${filter})`, "gi");
 				return text.replace(re, "<mark>$1</mark>");
+			}
+			// JavaScript : fonctions pour ajouter, remplir et lire les champs de lien
+			function addLienField(titre = "", url = "") {
+				const container = document.getElementById("lienContainer");
+				const div = document.createElement("div");
+				div.innerHTML = `
+    <input type="text" class="lienTitreField" placeholder="Titre du lien" value="${titre}" />
+    <input type="url" class="lienURLField" placeholder="https://..." value="${url}" />
+    <button type="button" onclick="this.parentNode.remove()">❌</button>
+  `;
+				container.appendChild(div);
 			}
 
 			// 🔄 Redéfinition de render()
@@ -333,28 +295,35 @@
 					const icon = typeIcon[entry.type] || "";
 					const div = document.createElement("div");
 					div.className = "entry" + (entry.valide ? " validated" : "");
-					div.innerHTML = `
-      <strong>${icon} [${entry.type.toUpperCase()}]</strong> <b>${highlight(
+					div.innerHTML = ` <strong>${icon} [${entry.type.toUpperCase()}]</strong> <b>${highlight(
 						entry.titre,
 						textFilter
 					)}</b><br>
-      <small>Ajouté le ${new Date(
-			entry.dateAjout
-		).toLocaleDateString()}</small><br>
-      <p>${highlight(entry.description, textFilter)}</p>
-      ${
-			entry.lien
-				? `<a href="${entry.lien}" target="_blank">Lien utile</a><br>`
-				: ""
-		}
-      <div class="actions">
-        <button onclick="toggleValid(${entry.id})">${
+					<small>Ajouté le ${new Date(entry.dateAjout).toLocaleDateString()}</small><br>
+					<p>${highlight(entry.description, textFilter)}</p>
+					
+					${
+						entry.liens && Array.isArray(entry.liens)
+							? entry.liens
+									.map(
+										(link) =>
+											`<a href="${
+												link.url
+											}" target="_blank">🔗 ${highlight(
+												link.titre,
+												textFilter
+											)}</a>`
+									)
+									.join("<br>")
+							: ""
+					}
+
+      <div class="actions"><button onclick="toggleValid(${entry.id})">${
 						entry.valide ? "Marquer non validé" : "Valider"
 					}</button>
         <button onclick="editEntry(${entry.id})">Modifier</button>
         <button onclick="deleteEntry(${entry.id})">Supprimer</button>
-      </div>
-    `;
+      </div>`;
 					entriesDiv.appendChild(div);
 				});
 			}
@@ -374,12 +343,24 @@
 			form.onsubmit = (e) => {
 				e.preventDefault();
 				const id = document.getElementById("entryId").value;
+				const liens = Array.from(
+					document.querySelectorAll("#lienContainer div")
+				)
+					.map((div) => {
+						const titre = div
+							.querySelector(".lienTitreField")
+							.value.trim();
+						const url = div.querySelector(".lienURLField").value.trim();
+						return titre && url ? { titre, url } : null;
+					})
+					.filter((l) => l);
+
 				const newEntry = {
 					id: id ? parseInt(id) : Date.now(),
 					type: document.getElementById("type").value,
 					titre: document.getElementById("titre").value,
 					description: document.getElementById("description").value,
-					lien: document.getElementById("lien").value,
+					liens: liens,
 					dateAjout: new Date().toISOString(),
 					valide: false,
 				};
@@ -393,6 +374,7 @@
 				}
 
 				form.reset();
+				document.getElementById("lienContainer").innerHTML = "";
 				closeModal();
 				document.getElementById("entryId").value = "";
 				save();
@@ -413,7 +395,14 @@
 					document.getElementById("type").value = entry.type;
 					document.getElementById("titre").value = entry.titre;
 					document.getElementById("description").value = entry.description;
-					document.getElementById("lien").value = entry.lien;
+
+					document.getElementById("lienContainer").innerHTML = "";
+					if (Array.isArray(entry.liens)) {
+						entry.liens.forEach((link) =>
+							addLienField(link.titre, link.url)
+						);
+					}
+
 					openModal();
 				}
 			}
