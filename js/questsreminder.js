@@ -213,38 +213,6 @@ window.addToCurrent = function (index) {
 
 /* -------------------------------------------------------------- */
 // Import / export stockage
-function exportStoredMacros() {
-	const macros = getStoredMacros();
-	if (!macros.length) return showMessage("Aucune macro à exporter.", true);
-	const blob = new Blob([JSON.stringify(macros, null, 2)], {
-		type: "application/json",
-	});
-	const url = URL.createObjectURL(blob);
-	const a = document.createElement("a");
-	a.href = url;
-	a.download = "Macros_backup.json";
-	a.click();
-	URL.revokeObjectURL(url);
-}
-
-function importStoredMacros(file) {
-	const reader = new FileReader();
-	reader.onload = (e) => {
-		try {
-			const incoming = JSON.parse(e.target.result);
-			if (!Array.isArray(incoming)) throw new Error();
-			const merged = mergeMacros(getStoredMacros(), incoming);
-			saveStoredMacros(merged);
-			updateMacroTable();
-			showMessage(
-				`${incoming.length} macros importées depuis le backup. Total : ${merged.length}.`
-			);
-		} catch {
-			showMessage("Fichier de backup invalide.", true);
-		}
-	};
-	reader.readAsText(file);
-}
 
 /* -------------------------------------------------------------- */
 // Gestion JSON courant via drag & drop
@@ -350,47 +318,5 @@ function applyFilter() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-	$("#importMacrosBtn").addEventListener("click", () => {
-		$("#importMacrosFile").click();
-	});
-	initDropzone();
-	updateMacroTable();
-	initnavigation();
-
-	exportTrigger(false);
-
-	$("#addForm").addEventListener("submit", (e) => {
-		e.preventDefault();
-		const name = $("#newMacroName").value.trim();
-		const text = $("#newMacroText").value;
-		if (!name) return showMessage("Le nom ne peut pas être vide.", true);
-		let macros = getStoredMacros();
-		if (
-			macros.some((m) => m.MacroName.toLowerCase() === name.toLowerCase())
-		) {
-			return showMessage("Nom de macro déjà existant.", true);
-		}
-		macros.push({ MacroName: name, MacroText: text });
-		saveStoredMacros(macros);
-		updateMacroTable();
-		showMessage("Macro ajoutée.");
-		e.target.reset();
-	});
-
-	$("#searchInput").addEventListener("input", applyFilter);
-	$("#resetBtn").addEventListener("click", () => {
-		if (!confirm("Vider complètement les macros enregistrées ?")) return;
-		localStorage.removeItem("storedMacros");
-		updateMacroTable();
-		showMessage("Macros réinitialisées.");
-
-		exportTrigger();
-	});
-
-	$("#exportMacrosBtn").addEventListener("click", exportStoredMacros);
-	$("#importMacrosFile").addEventListener("change", (e) => {
-		const file = e.target.files[0];
-		if (file) importStoredMacros(file);
-		e.target.value = "";
-	});
+	// initnavigation();
 });
