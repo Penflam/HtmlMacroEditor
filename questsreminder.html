@@ -5,8 +5,8 @@
 		<title>Pantheon's Quest Reminder</title>
 		<link rel="icon" href="data:;base64,iVBORw0KGgo=" />
 
-		<link rel="stylesheet" href="style.css" />
-		<link rel="stylesheet" href="footer.css" />
+		<link rel="stylesheet" href="/assets/css/style.css" />
+		<link rel="stylesheet" href="/assets/css/footer.css" />
 		<style>
 			nav {
 				text-align: center;
@@ -202,7 +202,6 @@
 					<span onclick="showForm('lieu')">🗺️ Ajouter un lieu</span>
 				</div>
 			</div>
-			<div class="menu"><a href="index.html">Macro Editor</a> </div>
 			<div class="menu"
 				>🔍 Filters/filtres
 				<div id="addmenu" class="dropdown">
@@ -233,6 +232,11 @@
 					>
 				</div>
 			</div>
+			<div class="menu"><a href="index.html">Macro Editor</a> </div>
+
+			<div class="menu"
+				><a href="mapping.html" target="_blank">MapReminder</a>
+			</div>
 		</div>
 
 		<div class="modal" id="modal">
@@ -254,9 +258,9 @@
 						>Description : <textarea id="description"></textarea>
 					</label>
 
-					<label>Liens (optionnels) :</label>
-					<label>Liens (titre + URL) :</label>
-					<div id="lienContainer"></div>
+					<div id="lienContainer">
+						<label>Liens (titre + URL) :</label></div
+					>
 					<button type="button" onclick="addLienField()"
 						>➕ Ajouter un lien</button
 					>

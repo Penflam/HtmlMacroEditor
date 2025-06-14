@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="fr">
+	<head>
+		<meta charset="UTF-8" />
+		<title>Pantheon's Road Map</title>
+		<link rel="icon" href="data:;base64,iVBORw0KGgo=" />
+
+		<link rel="stylesheet" href="/assets/css/style.css" />
+		<link rel="stylesheet" href="/assets/css/footer.css" />
+		<style>
+			html,
+			body {
+				margin: 0;
+				padding: 0;
+				overflow: hidden;
+				background: #bebebe;
+				font-family: sans-serif;
+				color: white;
+				height: 100%;
+				width: 100%;
+			}
+
+			#map {
+				position: absolute;
+				width: 20000px;
+				height: 11000px;
+				background-image: linear-gradient(
+						to right,
+						#444 1px,
+						transparent 1px
+					),
+					linear-gradient(to bottom, #444 1px, transparent 1px);
+				background-size: 100px 100px;
+				top: 0;
+				left: 0;
+				cursor: grab;
+				overflow: hidden;
+			}
+
+			#map:active {
+				cursor: grabbing;
+			}
+
+			.pin {
+				position: absolute;
+				width: 20px;
+				height: 20px;
+				border-radius: 50%;
+				background: red;
+				transform: translate(-50%, -50%);
+				border: 2px solid white;
+				box-shadow: 0 0 5px #fff;
+			}
+
+			#wrapper {
+				position: fixed;
+				top: 40px;
+				left: 20px;
+				background: rgba(81, 185, 255, 0.5);
+				border: 2px solid #55555593;
+				border-radius: 16px;
+				padding: 20px;
+				width: 300px;
+				z-index: 10;
+				display: flex;
+				align-content: center;
+				flex-direction: column;
+				justify-content: center;
+			}
+
+			label,
+			input {
+				display: block;
+				width: 6rem;
+				font-size: 1.2rem;
+			}
+			label {
+				display: none;
+			}
+
+			input {
+				padding: 5px;
+				border-radius: 6px;
+				border: none;
+			}
+
+			button {
+				margin-top: 10px;
+				padding: 20px 20px;
+				font-size: 1.3rem;
+				background: #444;
+				color: white;
+				border: none;
+				border-radius: 8px;
+				cursor: pointer;
+			}
+
+			button:hover {
+				background: #666;
+			}
+			.green {
+				background-color: #0f0;
+				color: #444;
+			}
+			.blue {
+				background-color: rgb(0, 68, 255);
+				color: #444;
+			}
+			.orange {
+				background-color: rgb(255, 123, 0);
+				color: #444;
+			}
+
+			#url {
+				margin-top: 10px;
+				font-size: 0.8em;
+				color: #0f0;
+				word-break: break-word;
+			}
+			.coord-item {
+				display: flex;
+				align-content: center;
+				justify-content: center;
+				gap: 5px;
+			}
+			h3 {
+				text-align: center;
+				margin-bottom: 5px;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="navbar">
+			<!-- <div class="menu"
+				>Files/Fichier
+				<div id="filesmenu" class="dropdown">
+					<span id="importMapBtn">Importer Map_backup.json</span>
+					<span id="exportMapBtn">Exporter Map_backup.json</span>
+				</div>
+			</div> -->
+			<div class="menu"><a href="index.html">Macro Editor</a> </div>
+			<div class="menu"
+				><a href="questsreminder.html" target="_blank">QuestsReminder</a>
+			</div>
+		</div>
+		<div id="map"></div>
+
+		<div id="wrapper">
+			<h3>Coordonnées</h3>
+			<form id="coordForm">
+				<div class="coord-item">
+					<label for="x">X :</label>
+					<input type="text" id="x" readonly />
+					<label for="y">Y :</label>
+					<input type="hidden" id="y" readonly />
+					<label for="z">Z :</label>
+					<input type="text" id="z" readonly />
+					<label for="pin">Nom du pin :</label>
+					<input type="hidden" id="pin" readonly />
+				</div>
+			</form>
+			<button id="buttonClipboard" onclick="checkClipboardInit()"
+				>Paste/Colle</button
+			>
+			<div id="url"></div>
+		</div>
+
+		<!-- Footer sombre -->
+		<footer class="footer">
+			<div class="footer-links">
+				<a
+					href="https://www.pantheonmmo.com/"
+					target="_blank"
+					title="Pantheon - Rise Of The Fallen">
+					<img
+						src="assets/castle-fortress-svgrepo-com.svg"
+						alt="Pantheon - Rise Of The Fallen"
+						class="footer-icon" />
+					Pantheon
+				</a>
+
+				<a
+					href="https://github.com/Penflam/HtmlMacroEditor"
+					title="GitHub Sources"
+					target="_blank">
+					<img
+						src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/github.svg"
+						alt="GitHub Sources"
+						class="footer-icon" />
+					GitHub
+				</a>
+
+				<a
+					href="https://shalazam.info"
+					target="_blank"
+					title="shalazam.info">
+					<img
+						src="https://shalazam.info/favicon-96.png"
+						alt="shalazam.info"
+						class="footer-icon" />
+					shalazam
+				</a>
+			</div>
+			<div class="footer-text"> Pantheon's Tribute : Macros Editor </div>
+		</footer>
+		<script>
+			let pinCounter = 0;
+			let pinList = [];
+			let mapsize = { w: 20000, h: 11000 };
+			let buttonClipboard = document.getElementById("buttonClipboard");
+
+			function getNextPinName() {
+				return "Pin_" + String(pinCounter++).padStart(3, "0");
+			}
+			function scrollToPosition(posX, posZ) {
+				const viewportWidth = window.innerWidth;
+				const viewportHeight = window.innerHeight;
+				const scrollX = posX - viewportWidth / 2;
+				const scrollY = posZ - viewportHeight / 2;
+				window.scrollTo(scrollX, scrollY);
+			}
+			function scrollToPosition2(x, z) {
+				const centerX = x;
+				const centerY = mapsize.h - z;
+				const viewportWidth = window.innerWidth;
+				const viewportHeight = window.innerHeight;
+				const scrollX = centerX - viewportWidth / 2;
+				const scrollY = centerY - viewportHeight / 2;
+				window.scrollTo(scrollX, scrollY);
+			}
+
+			// function addPin(x, z) {
+			// 	const pin = document.createElement("div");
+			// 	pin.className = "pin";
+			// 	pin.style.left = x + "px";
+			// 	pin.style.top = z + "px";
+			// 	document.getElementById("map").appendChild(pin);
+			// 	scrollToPosition(x, z);
+			// }
+			function addPin3(x, z) {
+				const adjustedZ = mapsize.h - z; // Inverser l'axe Y pour le placement visuel
+				const pin = document.createElement("div");
+				pin.className = "pin";
+				pin.style.left = x + "px";
+				pin.style.top = adjustedZ + "px";
+				document.getElementById("map").appendChild(pin);
+				scrollToPosition(x, z); // Optionnel : recentrer selon coordonnée du jeu
+			}
+			function addPin(x, z) {
+				const centerX = mapsize.w / 2;
+				const centerZ = mapsize.h / 2;
+				const posX = centerX + x;
+				const posZ = centerZ - z;
+
+				const pin = document.createElement("div");
+				pin.className = "pin";
+				pin.style.left = posX + "px";
+				pin.style.top = posZ + "px";
+				document.getElementById("map").appendChild(pin);
+
+				scrollToPosition(posX, posZ); // centre la vue sur le pin
+			}
+
+			function checkClipboardInit() {
+				buttonClipboard.classList.add("blue");
+				checkClipboard();
+			}
+
+			async function checkClipboard() {
+				try {
+					buttonClipboard.classList.remove("green");
+					const text = await navigator.clipboard.readText();
+
+					const regex =
+						/\/jumploc\s+([\d.\-]+)\s+([\d.\-]+)\s+([\d.\-]+)\s+(\d+)/;
+					const match = text.match(regex);
+
+					if (match) {
+						buttonClipboard.classList.add("green");
+						const x = parseFloat(match[1]);
+						const y = parseFloat(match[2]);
+						const z = parseFloat(match[3]);
+
+						const pinX = Math.round(x);
+						const pinZ = Math.round(z);
+						const pinName = getNextPinName();
+						const pinValue = `${pinX}.${pinZ}.${pinName}`;
+						pinList.push(pinValue);
+
+						document.getElementById("x").value = x.toFixed(2);
+						document.getElementById("y").value = y.toFixed(2);
+						document.getElementById("z").value = z.toFixed(2);
+						document.getElementById("pin").value = pinName;
+
+						const x_affiche = Math.round(x + 8);
+						const y_affiche = Math.round(z - 9);
+
+						let url = `https://shalazam.info/maps/1?zoom=9&x=${x_affiche}&y=${y_affiche}`;
+						for (const pin of pinList) {
+							url += `&pin%5B%5D=${pin}`;
+						}
+
+						document.getElementById("url").textContent = url;
+
+						addPin(x, z);
+						buttonClipboard.classList.remove("green");
+					} else {
+						document.getElementById("url").textContent =
+							"Le texte collé n'est pas une coordonnée /jumploc valide.";
+						document.getElementById("url").style.color = "red";
+						buttonClipboard.classList.add("orange");
+					}
+				} catch (err) {
+					buttonClipboard.classList.remove("blue");
+					console.error("Erreur :", err);
+					document.getElementById("url").textContent =
+						"Impossible de lire le presse-papier.";
+				}
+				buttonClipboard.classList.remove("blue");
+			}
+
+			// Dragging de la map
+			let isDragging = false;
+			let startX, startY;
+			let scrollStartX, scrollStartY;
+
+			const map = document.getElementById("map");
+
+			map.addEventListener("mousedown", (e) => {
+				isDragging = true;
+				startX = e.clientX;
+				startY = e.clientY;
+				scrollStartX = window.scrollX;
+				scrollStartY = window.scrollY;
+			});
+
+			window.addEventListener("mousemove", (e) => {
+				if (!isDragging) return;
+				const dx = e.clientX - startX;
+				const dy = e.clientY - startY;
+				window.scrollTo(scrollStartX - dx, scrollStartY - dy);
+			});
+
+			window.addEventListener("mouseup", () => {
+				isDragging = false;
+			});
+		</script>
+	</body>
+</html>
