@@ -5,7 +5,7 @@
 }
 body {
 	font-family: sans-serif;
-	background-image: url("assets/arkanlemarchand.webp");
+	/* background-image: url("assets/arkanlemarchand.webp"); */
 	background-repeat: no-repeat;
 	-webkit-background-size: cover;
 	-moz-background-size: cover;
